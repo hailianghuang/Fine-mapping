@@ -36,7 +36,7 @@ A Fine-mapping method using flat prior with steepest descent approximation.  Met
 ----------------------
 Prerequisites
 ----------------------
-The R nnet package is required to run this method.
+The R nnet package is required for this method.
 
 ----------------------
 Usage
@@ -44,11 +44,11 @@ Usage
 A sample dataset was provided at "dat/", including:
 1. example.raw: genotype data generated using the --recodeA option in PLINK (HTTP://pngu.mgh.harvard.edu/~purcell/plink/).  Each row is a sample and each column is a SNP.
 2. example.pheno: phenotype for the samples. 0 is control, 1 is UC and 2 is CD.
-3. pcs.txt: covariate file. Each row is a sample and each column is covariate you want to adjust for. 
+3. pcs.txt: covariate file. Each row is a sample and each column is a covariate you want to adjust for. 
 
-Fine-mapping can be performed by executing source("code/finemapping.r") in the R console. Output files will be saved in the "result/" folder, including:
-1. repos.txt: detailed summary statistics, for diagnostics.
-2. credible.txt: a list of SNPs in the 99% credible set. Column headers should be self explanatory.  The "probNormed" column has the posterior probability for the SNPs, and the "R" column is the correlation coefficient between the SNP and the lead SNP in the signal. 
+Fine-mapping can be performed by calling source("code/finemapping.r") in the R console. Output files will be saved in the "result/" folder, including:
+1. repos.txt: summary statistics of all SNPs (mostly for diagnostics).
+2. credible.txt: a list of SNPs in the 99% credible set. Column headers should be self-explanatory.  The "probNormed" column has the posterior probability for the SNPs, and the "R" column is the correlation coefficient between the SNP and the lead SNP in the signal. 
 
 
 
