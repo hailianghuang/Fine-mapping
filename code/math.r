@@ -60,6 +60,7 @@ buildModel <- function( snp, trait){
   
 }
 
+#calculate the logliklihood from phenotype, covaraiate, genotype (dat) and the model specification (from the buildModel function) 
 getlogLik <- function(y, covar, model_spec, dat ){
 
 	ret <- NA
@@ -119,6 +120,7 @@ getlogLik <- function(y, covar, model_spec, dat ){
 	ret	
 }
 
+#add a SNP to an existing model 
 growModel <- function(model_spec, i, trait, dat){
 
 	existing_snp <- c(model_spec$CD_SNP, model_spec$UC_SNP, model_spec$IBD_SNP)
@@ -147,6 +149,7 @@ growModel <- function(model_spec, i, trait, dat){
 	model_spec
 }
 
+#to retreive the model specification from the "likelihood data structure
 getSpec <- function(test_ret){
 
 	model_spec <- list(CD_SNP=NULL, UC_SNP=NULL, IBD_SNP=NULL, good=1)
@@ -169,6 +172,7 @@ getSpec <- function(test_ret){
 	model_spec
 }
 
+#calcualte the probabilities from the likelihoods
 modelProb<-function(y, covar, model_spec, dat, Neff){
   
   ret <- getlogLik(y, covar, model_spec, dat)
@@ -184,6 +188,7 @@ modelProb<-function(y, covar, model_spec, dat, Neff){
   ret
 }
 
+#test whether a specific SNP (i) is associated 
 testSNP <- function(i, y, covar, Neff, prev_best_model, null_logProb, dat){
   
   ret <- c();
@@ -244,6 +249,7 @@ testSNP <- function(i, y, covar, Neff, prev_best_model, null_logProb, dat){
   ret
 }
 
+#iterate through all the SNPs to find the optimal model 
 modelSearch <- function(dosage, pheno, PCA, Neff){	
   
   iter <- 0
@@ -286,7 +292,7 @@ modelSearch <- function(dosage, pheno, PCA, Neff){
       print(paste("Start searching model of size", iter+1))
       prev_best_model <- best_model
     }
-    
+    #testSNP is the function, the variables after it are the input, items in the names(dosage) will be iterated through 
     rr <- lapply(names(dosage), testSNP, pheno, PCA, Neff, prev_best_model, null_model$logProb, dosage)
     ret <- do.call("rbind", rr)
     result <- rbind(result, ret)
@@ -307,6 +313,7 @@ modelSearch <- function(dosage, pheno, PCA, Neff){
   result
 }
 
+#repositioning 
 reposTest <- function(snp, dosage,  x_other, xs, hiti, y, constrain){
   
   xnew <- dosage[, snp ]
@@ -323,6 +330,7 @@ reposTest <- function(snp, dosage,  x_other, xs, hiti, y, constrain){
   data.frame(snp, newL)
 }
 
+#to get the credible set from the likelihood model 
 getCredibleSNP <- function(best_snp, logProb,model, snp_name, threshold=0.99){
   
   R <- sapply(snp_name, function(x){y <- dosage[, x]; cor(y, dosage[,best_snp])})
