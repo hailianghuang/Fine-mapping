@@ -1,5 +1,8 @@
 require(nnet)
 
+#get the number of independent variants in a region
+#input: covriance matrix
+#output: number of independent variants (can be a fractional number)
 getT <- function(cov){
   w <- rep(1, dim(cov)[1])
   T <-0
@@ -18,6 +21,7 @@ getT <- function(cov){
   T
 }
 
+#multinomial constraint model 
 multinomConstrain <- function(y,xs,constrain){
  # fit a constrained multinomial model
  Npheno <- length(unique(y)) - 1
@@ -40,6 +44,20 @@ multinomConstrain <- function(y,xs,constrain){
 	}
 
 	nnet.default(X, Y, mask = mask, size = 0,skip = TRUE, softmax = TRUE, rang=0, trace=FALSE)
+}
+
+#a function to give you the "model specification" from variant and trait.
+buildModel <- function( snp, trait){
+  
+  model_spec <- c()
+  model_spec$CD_SNP <- as.character(snp[trait=="CD"])
+  model_spec$UC_SNP <- as.character(snp[trait=="UC"])
+  model_spec$IBD_SNP <- as.character(snp[trait=="IBD"])
+  model_spec$good  <- 1
+  model_spec$new_pos  <- -1
+  
+  model_spec
+  
 }
 
 getlogLik <- function(y, covar, model_spec, dat ){
@@ -127,19 +145,6 @@ growModel <- function(model_spec, i, trait, dat){
 		model_spec$new_pos <- new_pos;
 	}
 	model_spec
-}
-
-buildModel <- function( snp, trait){
-
-	model_spec <- c()
-	model_spec$CD_SNP <- as.character(snp[trait=="CD"])
-	model_spec$UC_SNP <- as.character(snp[trait=="UC"])
-	model_spec$IBD_SNP <- as.character(snp[trait=="IBD"])
-	model_spec$good  <- 1
-	model_spec$new_pos  <- -1
-
-	model_spec
-
 }
 
 getSpec <- function(test_ret){
